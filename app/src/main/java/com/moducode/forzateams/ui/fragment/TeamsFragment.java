@@ -19,7 +19,8 @@ import com.hannesdorfmann.mosby3.mvp.delegate.FragmentMvpDelegate;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.LceViewState;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.MvpLceViewStateFragment;
 import com.hannesdorfmann.mosby3.mvp.viewstate.lce.data.RetainingLceViewState;
-import com.moducode.forzateams.ErrorHelper;
+
+import com.moducode.forzateams.ErrorHelperKt;
 import com.moducode.forzateams.R;
 import com.moducode.forzateams.data.Team;
 import com.moducode.forzateams.schedulers.ImplSchedulers;
@@ -82,7 +83,7 @@ public class TeamsFragment extends MvpLceViewStateFragment<SwipeRefreshLayout, L
 
     @Override
     protected String getErrorMessage(Throwable e, boolean pullToRefresh) {
-        int stringId = ErrorHelper.INSTANCE.getMessage(e);
+        int stringId = ErrorHelperKt.getMessage(e);
         return getString(stringId);
     }
 
