@@ -1,36 +1,24 @@
 package com.moducode.forzateams.ui.fragment;
 
-import android.util.MalformedJsonException;
-
-import com.moducode.forzateams.ErrorMapperKt;
 import com.moducode.forzateams.TestData;
-import com.moducode.forzateams.TestSchedulerRule;
-import com.moducode.forzateams.data.Team;
 import com.moducode.forzateams.schedulers.ImmediateSchedulers;
 import com.moducode.forzateams.service.RetrofitTeamService;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
+import java.net.UnknownHostException;
+
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subscribers.TestSubscriber;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,9 +28,6 @@ import static org.mockito.Mockito.when;
 
 
 public class TeamsFragmentPresenterTest {
-
-    @Rule
-    public final TestSchedulerRule rule = new TestSchedulerRule();
 
     @Mock
     private TeamsFragmentContract.View view;
@@ -91,6 +76,36 @@ public class TeamsFragmentPresenterTest {
     }
 
     @Test
+    public void fetchTeams_RETRY_TIMEOUT_EXCEPTION() throws Exception{
+        SocketTimeoutException timeoutException = new SocketTimeoutException("Error");
+        when(service.getTeams()).thenReturn(Observable.error(timeoutException));
+
+        subject.fetchTeams(true);
+        verify(view).showLoading(true);
+        verify(view, never()).showError(any(Throwable.class), anyBoolean());
+    }
+
+    @Test
+    public void fetchTeams_RETRY_CONNECTION_EXCEPTION() throws Exception{
+        ConnectException connectException = new ConnectException("Error");
+        when(service.getTeams()).thenReturn(Observable.error(connectException));
+
+        subject.fetchTeams(true);
+        verify(view).showLoading(true);
+        verify(view, never()).showError(any(Throwable.class), anyBoolean());
+    }
+
+    @Test
+    public void fetchTeams_RETRY_UNKNOWNHOST() throws Exception{
+        UnknownHostException unknownHostException = new UnknownHostException("Error");
+        when(service.getTeams()).thenReturn(Observable.error(unknownHostException));
+
+        subject.fetchTeams(true);
+        verify(view).showLoading(true);
+        verify(view, never()).showError(any(Throwable.class), anyBoolean());
+    }
+
+    @Test
     public void fetchTeams_LIST_SIZE(){
         when(service.getTeams()).thenReturn(Observable.just(TestData.teams));
 
@@ -99,39 +114,6 @@ public class TeamsFragmentPresenterTest {
                 .assertValue(list -> list.size() == 2);
     }
 
-    @Test
-    public void fetchTeams_RETRY(){
-        ConnectException connectException = new ConnectException("Error");
-        SocketTimeoutException socketTimeoutException = new SocketTimeoutException("Error");
-        MalformedJsonException malformedJsonException = new MalformedJsonException("Error");
 
-
-
-        when(service.getTeams())
-                .thenReturn(Observable.fromCallable(new Callable<List<Team>>() {
-                    private boolean firstItemEmitted;
-
-                    @Override
-                    public List<Team> call() throws Exception {
-                        if(!firstItemEmitted){
-                            firstItemEmitted = true;
-                            throw malformedJsonException;
-                        }else {
-                            return TestData.teams;
-                        }
-                    }
-                }));
-
-        TestObserver<List<Team>> testObserver = service.getTeams().test();
-
-
-        testObserver.assertError(malformedJsonException);
-
-        TestObserver<List<Team>> testObserver1 = service.getTeams().test();
-
-        rule.getTestScheduler().advanceTimeBy(4, TimeUnit.SECONDS);
-        testObserver1.assertValue(TestData.teams);
-
-    }
 
 }
