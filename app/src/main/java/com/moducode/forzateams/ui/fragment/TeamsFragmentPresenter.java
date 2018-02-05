@@ -2,20 +2,16 @@ package com.moducode.forzateams.ui.fragment;
 
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 import com.hannesdorfmann.mosby3.mvp.lce.MvpLceView;
-import com.moducode.forzateams.ErrorMapperKt;
+import com.moducode.forzateams.ErrorHelperKt;
+
 import com.moducode.forzateams.schedulers.BaseSchedulers;
 import com.moducode.forzateams.service.RetrofitTeamService;
 
 
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Single;
 import io.reactivex.functions.Function;
 import timber.log.Timber;
 
@@ -41,7 +37,7 @@ public class TeamsFragmentPresenter extends MvpBasePresenter<TeamsFragmentContra
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
                 .retryWhen(throwableObservable -> throwableObservable.flatMap((Function<Throwable, ObservableSource<?>>) throwable -> {
-                    if(ErrorMapperKt.map(throwable)){
+                    if(ErrorHelperKt.retryOnError(throwable)){
                         Timber.e(throwable, "Retrying in 10 seconds");
                         return Observable.timer(10, TimeUnit.SECONDS);
                     }
