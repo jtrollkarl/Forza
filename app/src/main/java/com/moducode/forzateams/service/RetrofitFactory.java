@@ -12,14 +12,16 @@ import timber.log.Timber;
  */
 
 public class RetrofitFactory {
+    
+    private static final String BASE_URL = "https://s3-eu-west-1.amazonaws.com/forza-assignment/android/";
 
-    private static final String BASE_URL = "https://s3-eu-west-1.amazonaws.com/forza-assignment/android";
+
 
     public static <T> T create(Class<T> clazz){
         Timber.d("Retrofit service created");
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(interceptor);

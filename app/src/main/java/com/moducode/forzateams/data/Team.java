@@ -21,6 +21,13 @@ public class Team {
     @Expose
     private String countryName;
 
+
+    public Team(String name, Boolean national, String countryName) {
+        this.name = name;
+        this.national = national;
+        this.countryName = countryName;
+    }
+
     public String getName() {
         return name;
     }
@@ -32,7 +39,6 @@ public class Team {
     public Boolean getNational() {
         return national;
     }
-
 
     public void setNational(Boolean national) {
         this.national = national;

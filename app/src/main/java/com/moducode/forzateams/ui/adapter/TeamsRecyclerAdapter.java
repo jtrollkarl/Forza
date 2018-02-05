@@ -15,12 +15,16 @@ import java.util.List;
  * Created by Jay on 2018-02-02.
  */
 
-public class TeamsRecycler extends RecyclerView.Adapter<TeamsRecycler.TeamsViewHolder>  {
+public class TeamsRecyclerAdapter extends RecyclerView.Adapter<TeamsRecyclerAdapter.TeamsViewHolder>  {
 
     private List<Team> teamList;
 
     public void setData(List<Team> teamList){
         this.teamList = teamList;
+    }
+
+    public List<Team> getData(){
+        return this.teamList;
     }
 
     @Override

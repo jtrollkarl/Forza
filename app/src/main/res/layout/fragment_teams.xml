@@ -4,10 +4,20 @@
     android:layout_height="match_parent"
     tools:context="com.moducode.forzateams.ui.fragment.TeamsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <include layout="@layout/loading_view"/>
+    <include layout="@layout/error_view"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/contentView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_teams"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

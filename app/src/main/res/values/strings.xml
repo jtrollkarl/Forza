@@ -1,8 +1,13 @@
 <resources>
+
     <string name="app_name">ForzaTeams</string>
     <string name="tv_teams_national_true" translatable="true">National? Yes</string>
     <string name="tv_teams_national_false" translatable="true">National? No</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error_refresh" translatable="true">An error has occurred! Tap here to retry</string>
+
+    <string name="error_fetching_teams" translatable="true">Error while fetching data</string>
+    <string name="error_parse_json" translatable="true">Error parsing json</string>
+    <string name="error_connection" translatable="true">Connection error</string>
+    <string name="error_timeout" translatable="true">Connection timed out</string>
 </resources>

@@ -4,6 +4,7 @@ import com.moducode.forzateams.data.Team;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.http.GET;
 
@@ -13,7 +14,7 @@ import retrofit2.http.GET;
 
 public interface RetrofitTeamService {
 
-    @GET("/teams.json")
-    Single<List<Team>> getTeams();
+    @GET("teams.json")
+    Observable<List<Team>> getTeams();
 
 }

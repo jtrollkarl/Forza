@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 
 import com.moducode.forzateams.R;
+import com.moducode.forzateams.ui.fragment.TeamsFragment;
 
 public class MainActivity extends SingleFragmentActivity {
 
@@ -15,8 +16,7 @@ public class MainActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment getFragment() {
-        // TODO: 2018-02-02 change to real fragment
-        return new Fragment();
+        return new TeamsFragment();
     }
 
 

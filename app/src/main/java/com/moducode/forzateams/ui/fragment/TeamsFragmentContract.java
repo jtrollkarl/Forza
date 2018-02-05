@@ -17,7 +17,6 @@ import java.util.List;
 public interface TeamsFragmentContract {
 
     interface View extends MvpLceView<List<Team>>{
-        void showMessage(@StringRes int resId);
 
     }
 
