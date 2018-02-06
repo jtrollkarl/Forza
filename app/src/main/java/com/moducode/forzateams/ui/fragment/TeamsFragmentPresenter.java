@@ -24,6 +24,9 @@ public class TeamsFragmentPresenter extends MvpBasePresenter<TeamsFragmentContra
     private final RetrofitTeamService teamService;
     private final BaseSchedulers schedulers;
 
+    private static final int SECONDS_TO_RETRY = 10;
+    private static final int TIMES_TO_RETRY = 3;
+
     public TeamsFragmentPresenter(RetrofitTeamService teamService, BaseSchedulers schedulers) {
         this.teamService = teamService;
         this.schedulers = schedulers;
@@ -36,10 +39,10 @@ public class TeamsFragmentPresenter extends MvpBasePresenter<TeamsFragmentContra
         teamService.getTeams()
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
-                .retryWhen(throwableObservable -> throwableObservable.flatMap((Function<Throwable, ObservableSource<?>>) throwable -> {
+                .retryWhen(throwableObservable -> throwableObservable.take(TIMES_TO_RETRY).flatMap((Function<Throwable, ObservableSource<?>>) throwable -> {
                     if(ErrorHelperKt.retryOnError(throwable)){
-                        Timber.e(throwable, "Retrying in 10 seconds");
-                        return Observable.timer(10, TimeUnit.SECONDS);
+                        Timber.e(throwable, "Retrying in %d seconds", SECONDS_TO_RETRY);
+                        return Observable.timer(SECONDS_TO_RETRY, TimeUnit.SECONDS).observeOn(schedulers.ui());
                     }
                     return Observable.error(throwable);
                 }))
